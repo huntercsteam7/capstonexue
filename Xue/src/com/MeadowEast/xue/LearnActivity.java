@@ -3,8 +3,10 @@ package com.MeadowEast.xue;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -16,6 +18,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +101,11 @@ public class LearnActivity extends Activity implements OnGestureListener {
 			//advance.setText("next");
 			itemsShown++;
 		} else if (itemsShown == 3){
+			//If items are 3, advance to next card. Slide animation below.
+			Animation a1;
+        	a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.left_to_right_slide);
+        	prompt.startAnimation(a1);
+			
 			// Got it wrong
 			//advance.setText("show");
 			lp.wrong();
@@ -206,16 +215,20 @@ public class LearnActivity extends Activity implements OnGestureListener {
             float velocityY) {
         try {
 
-            // left to right swipe x-axis
+            // left to right swipe x-axis -Next card swipe
             if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
                     && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-
+            	
+            	//Slider animation code below, works by recalling the activity again with a slide, look for alternatives or just use saveInstanceState to restart at checkpoint.
+            	//Intent slideActivity = new Intent(LearnActivity.this, LearnActivity.class);
+            	//Bundle bndlanimation = ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.animation, R.anim.animation2).toBundle();
+            	//startActivity(slideActivity, bndlanimation);
+            	itemsShown=3;
             	doAdvance();
             }
-            // top to bottom y-axis
+            // top to bottom y-axis -Show swipe
             else if(e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
             {
-            	itemsShown=3;
             	doAdvance();
             }
             
