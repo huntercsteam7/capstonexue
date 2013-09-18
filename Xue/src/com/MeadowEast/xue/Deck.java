@@ -9,12 +9,16 @@ public class Deck {
 	public CardStatus get(){
 		return cardStatusQueue.poll();
 	}
+	//Get last card in the list.
+	public CardStatus getLast(){
+		return cardStatusQueue.pollLast();
+	}
 	public void put(CardStatus cs){
 		cardStatusQueue.add(cs);
 	}
 	//Push function to push card back to the front of the list (stacking)
-	public void push(CardStatus cs){
-		cardStatusQueue.push(cs);
+	public void putFront(CardStatus cs){
+		cardStatusQueue.addFirst(cs);
 	}
 	public boolean isEmpty(){
 		return cardStatusQueue.isEmpty();

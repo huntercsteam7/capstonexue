@@ -101,8 +101,16 @@ abstract public class LearningProject {
 	
 	//Do undo here
 	public boolean undo(){
-		
+		if(deck.isEmpty()) return false;
+		deck.putFront(cardStatus); 		//Puts current card into the front of the deck.
+		cardStatus = deck.getLast(); 	//Gets the last card in the list, basically the last card that was put back to the back of the deck.
+		seen--;							//Subtract the seen. (Check will be done when calling undo from LearnActivity to make sure seen != 1
+		card = AllCards.getCard(cardStatus.getIndex()); //Update the card with what is now the previous card.
 		return true;
+	}
+	
+	public int seenTimes(){
+		return seen;
 	}
 	
 	public int currentIndex(){

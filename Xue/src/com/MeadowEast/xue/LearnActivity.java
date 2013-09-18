@@ -115,7 +115,11 @@ public class LearnActivity extends Activity implements OnGestureListener {
 	}
 	//Do undo here
 	private void doUndo(){
-		
+		lp.undo();
+		clearContent();
+		prompt.setText(lp.prompt());
+		itemsShown = 1;
+		status.setText(lp.deckStatus());
 	}
 	
 	private void clearContent(){
@@ -231,14 +235,16 @@ public class LearnActivity extends Activity implements OnGestureListener {
             	
             }
         	//left to right -> undo
-        	else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
-        	{
-        		Toast.makeText(getApplicationContext(), "Doing Undo!!", Toast.LENGTH_SHORT).show();
-        		doUndo();
+        	else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY){
+        		if(lp.seenTimes()>1){
+        			doUndo();
+        			Toast.makeText(getApplicationContext(), "Undo!!", Toast.LENGTH_SHORT).show();
+        		}
+        		else
+        			Toast.makeText(getApplicationContext(), "No more previous cards!", Toast.LENGTH_SHORT).show();
         	}
             // bottom to top ->get rid of card only if itemsShown is at least 1
-            else if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
-            {
+            else if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
             		itemsShown=3;
             		Animation a1;
             		a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_to_top_slide);
@@ -250,8 +256,7 @@ public class LearnActivity extends Activity implements OnGestureListener {
             		doAdvance();
             }
         	//top to bottom ->show next
-            else if(e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
-            {
+            else if(e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
             	if(itemsShown<3)
             		doAdvance();
             }
