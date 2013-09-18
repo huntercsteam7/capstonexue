@@ -9,8 +9,10 @@ package com.MeadowEast.xue;
 
 public final class R {
     public static final class anim {
-        public static final int left_to_right_slide=0x7f040000;
-        public static final int right_to_left_slide=0x7f040001;
+        public static final int bottom_to_top_slide=0x7f040000;
+        public static final int left_to_right_slide=0x7f040001;
+        public static final int right_to_left_slide=0x7f040002;
+        public static final int top_to_bottom_slide=0x7f040003;
     }
     public static final class attr {
     }

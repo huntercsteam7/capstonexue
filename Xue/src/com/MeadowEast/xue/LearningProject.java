@@ -99,6 +99,12 @@ abstract public class LearningProject {
 		return true;
 	}
 	
+	//Do undo here
+	public boolean undo(){
+		
+		return true;
+	}
+	
 	public int currentIndex(){
 		if (cardStatus==null)
 			return -1;

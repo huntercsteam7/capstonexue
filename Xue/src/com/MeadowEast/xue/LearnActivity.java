@@ -102,9 +102,6 @@ public class LearnActivity extends Activity implements OnGestureListener {
 			itemsShown++;
 		} else if (itemsShown == 3){
 			//If items are 3, advance to next card. Slide animation below.
-			Animation a1;
-        	a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.left_to_right_slide);
-        	prompt.startAnimation(a1);
 			
 			// Got it wrong
 			//advance.setText("show");
@@ -115,6 +112,10 @@ public class LearnActivity extends Activity implements OnGestureListener {
 			itemsShown = 1;
 			status.setText(lp.deckStatus());
 		}
+	}
+	//Do undo here
+	private void doUndo(){
+		
 	}
 	
 	private void clearContent(){
@@ -211,25 +212,48 @@ public class LearnActivity extends Activity implements OnGestureListener {
 		return false;
 	}
 
+		//Swipe OK. Effects ok.
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
             float velocityY) {
         try {
 
-            // left to right swipe x-axis -Next card swipe
-            if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                    && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+        	//right to left. ->next Card
+        	if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+        		if(itemsShown>1){
+        			itemsShown=3;
+        			Animation a1;
+                	a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right_to_left_slide);
+                	prompt.startAnimation(a1);
+                	status.startAnimation(a1);
+                	doAdvance();
+            		Toast.makeText(getApplicationContext(), "Next Card!!", Toast.LENGTH_SHORT).show();
+        		}
             	
-            	//Slider animation code below, works by recalling the activity again with a slide, look for alternatives or just use saveInstanceState to restart at checkpoint.
-            	//Intent slideActivity = new Intent(LearnActivity.this, LearnActivity.class);
-            	//Bundle bndlanimation = ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.animation, R.anim.animation2).toBundle();
-            	//startActivity(slideActivity, bndlanimation);
-            	itemsShown=3;
-            	doAdvance();
             }
-            // top to bottom y-axis -Show swipe
+        	//left to right -> undo
+        	else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
+        	{
+        		Toast.makeText(getApplicationContext(), "Doing Undo!!", Toast.LENGTH_SHORT).show();
+        		doUndo();
+        	}
+            // bottom to top ->get rid of card only if itemsShown is at least 1
+            else if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
+            {
+            		itemsShown=3;
+            		Animation a1;
+            		a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_to_top_slide);
+            		prompt.startAnimation(a1);
+            		status.startAnimation(a1);
+            		
+            		Toast.makeText(getApplicationContext(), "Card Removed!!", Toast.LENGTH_SHORT).show();
+            		//Do remove here? Instead of doAdvance()
+            		doAdvance();
+            }
+        	//top to bottom ->show next
             else if(e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
             {
-            	doAdvance();
+            	if(itemsShown<3)
+            		doAdvance();
             }
             
         } catch (Exception e) {
@@ -242,7 +266,6 @@ public class LearnActivity extends Activity implements OnGestureListener {
 	public void onLongPress(MotionEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("HELLO BLUE LONG PRESS!!");
-
 
 	}
 
