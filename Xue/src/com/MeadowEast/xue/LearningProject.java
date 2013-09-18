@@ -10,7 +10,7 @@ import android.util.Log;
 abstract public class LearningProject {
 	
 	private String name;
-	private int n, seen;
+	private int n, seen, removed;
 	protected List<IndexSet> indexSets;
 	protected Map<Integer, Date> timestamps;
 	protected Deck deck;
@@ -22,6 +22,7 @@ abstract public class LearningProject {
 		this.n = n;
 		this.name = name;
 		this.seen = 0;
+		this.removed = 0;
 		Log.d(TAG, "Creating index sets");
 		indexSets = new ArrayList<IndexSet>();
 		for (int i=0; i<5; ++i){
@@ -105,12 +106,47 @@ abstract public class LearningProject {
 		deck.putFront(cardStatus); 		//Puts current card into the front of the deck.
 		cardStatus = deck.getLast(); 	//Gets the last card in the list, basically the last card that was put back to the back of the deck.
 		seen--;							//Subtract the seen. (Check will be done when calling undo from LearnActivity to make sure seen != 1
+		if(!cardStatus.isInDeck()){		//If card was removed from deck, set remove count -1, set isInDeck to true.
+			removed--;
+			cardStatus.setIsInDeck(true);
+		}
 		card = AllCards.getCard(cardStatus.getIndex()); //Update the card with what is now the previous card.
 		return true;
 	}
+	//Do remove here, similiar to next but set boolean isInDeck flag to false.
+	//THIS IS LAZY DELETION
+	public boolean remove(){
+		if(deck.isEmpty())return false;
+		cardStatus.setIsInDeck(false);		//Lazy delete card from deck
+		deck.put(cardStatus);				//Put back to the deck with false isInDeck flag.
+		
+		cardStatus = deck.get();			//Rest is the same as next() but add removed count to update statusText
+		seen++;
+		removed++;
+		card = AllCards.getCard(cardStatus.getIndex());
+		return true;
+	}
 	
+	//Returns how many cards have been seen. (Used as safety check for undo at initial 1st card)
 	public int seenTimes(){
 		return seen;
+	}
+	//Check to see if current card is valid in deck
+	public boolean isCardInDeck(){
+		return cardStatus.isInDeck();
+	}
+	//Function to cycle cycle to next card. Used with above function to find first valid card in deck
+	public boolean cycleCards(){
+		if(deck.isEmpty() || cardStatus == null) return false; //If deck is empty or if there is no card to look at.
+		deck.put(cardStatus); //Put current card into back.
+		cardStatus = deck.get(); //Get new card status
+		seen++;					 //Increase seen
+		card = AllCards.getCard(cardStatus.getIndex());	//Set new card
+		return true;
+	}
+	//Get total removed card count. If this equal to deck size, end.
+	public boolean removedAllCards(){
+		return removed == deck.size()+1;
 	}
 	
 	public int currentIndex(){
@@ -138,7 +174,7 @@ abstract public class LearningProject {
 	}
 	
 	String deckStatus(){
-		String left = (deck.size()+1)+" left";
+		String left = ((deck.size()+1)-removed) + " left"; //Total deck size - removed cards left
 		return seen > n ? left : seen + " of " + n + " seen, " + left; 
 	}
 	

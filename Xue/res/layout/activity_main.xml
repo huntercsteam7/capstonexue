@@ -6,14 +6,15 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="30dp" 
-	android:background="#3B5998">
+	android:background="@drawable/xue_bg">
+
     <Button
         android:id="@+id/ecButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:padding="20dp"
+        android:padding="30dp"
         android:text="@string/ecButtonLabel"
         android:textSize="40sp" 
         android:textColor="#FFFFFF"/>
@@ -23,7 +24,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:padding="20dp"
+        android:padding="30dp"
         android:text="@string/ceButtonLabel"
         android:textSize="40sp" 
         android:textColor="#FFFFFF"/>
@@ -32,7 +33,7 @@
         android:id="@+id/exitButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:padding="30dp"
         android:text="@string/exitButtonLabel"
         android:textSize="40sp" 
         android:textColor="#FFFFFF"/>

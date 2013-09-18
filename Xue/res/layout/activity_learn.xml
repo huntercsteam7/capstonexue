@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp" 
-    android:background="#3B5998">
+    android:background="@drawable/xue_bg">
     <TextView
         android:id="@+id/promptTextView"
         android:layout_width="fill_parent"

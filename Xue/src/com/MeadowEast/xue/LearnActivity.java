@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LearnActivity extends Activity implements OnGestureListener {
+public class LearnActivity extends Activity implements OnGestureListener, OnClickListener {
 	static final String TAG = "LearnActivity";
 	static final int ECDECKSIZE = 40;
 	static final int CEDECKSIZE = 60;
@@ -82,10 +82,16 @@ public class LearnActivity extends Activity implements OnGestureListener {
     }
     
     
-    //Private variable "advance" not defined in gesture. Delete it from declaration up top. (Commented it out at the moment)
+    //Do advance to do next step in the flash card. Everything from show answer to move to next
 	private void doAdvance(){
-		if (itemsShown == 0){
-			if (lp.next()){
+		switch (itemsShown){
+		case 0:
+			if(lp.removedAllCards()) //If all cards are removed, display finished text.
+				displayFinished();
+			if (lp.next()){ // If/else to check if there is a deck.;
+				while(!lp.isCardInDeck()) //While the card is not in deck, keep cycling until there is.
+					lp.cycleCards();
+				
 				prompt.setText(lp.prompt());
 				status.setText(lp.deckStatus());
 				itemsShown++;
@@ -93,41 +99,80 @@ public class LearnActivity extends Activity implements OnGestureListener {
 				Log.d(TAG, "Error: Deck starts empty");
 				throw new IllegalStateException("Error: Deck starts empty.");
 			}
-		} else if (itemsShown == 1){
-			answer.setText(lp.answer());
-			itemsShown++;
-		} else if (itemsShown == 2){
-			other.setText(lp.other());
-			//advance.setText("next");
-			itemsShown++;
-		} else if (itemsShown == 3){
-			//If items are 3, advance to next card. Slide animation below.
-			
-			// Got it wrong
-			//advance.setText("show");
-			lp.wrong();
-			lp.next();
-			clearContent();
-			prompt.setText(lp.prompt());
-			itemsShown = 1;
-			status.setText(lp.deckStatus());
+			break;
+		case 1:
+			if(lp.removedAllCards()) //If all cards are removed, display finished text.
+				displayFinished();
+			else{ //Else set prompt for next card;
+				answer.setText(lp.answer());
+				itemsShown++;
+			}
+			break;
+		case 2:
+			if(lp.removedAllCards()) //If all cards are removed, display finished text.
+				displayFinished();
+			else{
+				other.setText(lp.other());
+				itemsShown++;
+			}
+			break;
+		case 3:	
+			if(lp.removedAllCards()) //If all cards are removed, display finished text.
+				displayFinished();
+			else{
+				lp.wrong();			//All answer shown, got it wrong, clear content and reset to 0 state.
+				clearContent();
+				itemsShown = 0;
+				doAdvance();		//Recursively call it once more time to set up the next card's prompt textView;
+			}
+			break;
 		}
 	}
 	//Do undo here
 	private void doUndo(){
+		Animation a1;
+		
 		lp.undo();
+		a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.left_to_right_slide);
+    	prompt.startAnimation(a1);
+    	status.startAnimation(a1);
 		clearContent();
 		prompt.setText(lp.prompt());
 		itemsShown = 1;
 		status.setText(lp.deckStatus());
 	}
+	//Do remove here
+	private void doRemove(){
+		if(lp.removedAllCards()) //If all cards are removed, display finished text.
+			displayFinished();
+		else{
+			lp.remove();
+			clearContent();
+			Animation a1;
+    		a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_to_top_slide);
+    		prompt.startAnimation(a1);
+    		status.startAnimation(a1);
+			prompt.setText(lp.prompt());
+			itemsShown = 1;
+			status.setText(lp.deckStatus());
+		}
+	}
 	
+	//Clears the textViews
 	private void clearContent(){
 		prompt.setText("");
 		answer.setText("");
 		other.setText("");
 	}
-	
+	//Set text view to done display. Call this once all the cards are removed from deck.
+	private void displayFinished(){
+		prompt.setText("All Cards Removed!!");
+		answer.setText("Hit Return Below");
+		other.setText("To Return To Menu");
+		status.setText("DONE!!");
+	}
+
+	/*
 	private void doOkay(){
 		//if (okay.getText().equals("done"))
 		if(true)
@@ -157,26 +202,8 @@ public class LearnActivity extends Activity implements OnGestureListener {
 			//okay.setText("done");
 			clearContent();
 		}
-	}
+	}*/
     
-	//Instead of onClick, use swipe (fling) gestures to call doAdvance();
-	
-/*    public void onClick(View v){
-    	switch (v.getId()){
-    	case R.id.advanceButton:
-    		doAdvance();
-			break;
-    	case R.id.okayButton:
-    		doOkay();
-			break;
-//    	case R.id.promptTextView:
-//    	case R.id.answerTextView:
-//    	case R.id.otherTextView:
-//    		Toast.makeText(this, "Item index: "+lp.currentIndex(), Toast.LENGTH_LONG).show();
-//    		break;
-    	}
-    }
-    */
 
     public boolean onLongClick(View v){
     	switch (v.getId()){
@@ -220,17 +247,17 @@ public class LearnActivity extends Activity implements OnGestureListener {
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
             float velocityY) {
         try {
-
+        	Animation a1;
         	//right to left. ->next Card
         	if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
         		if(itemsShown>1){
         			itemsShown=3;
-        			Animation a1;
+        			
                 	a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right_to_left_slide);
                 	prompt.startAnimation(a1);
                 	status.startAnimation(a1);
                 	doAdvance();
-            		Toast.makeText(getApplicationContext(), "Next Card!!", Toast.LENGTH_SHORT).show();
+            		//Toast.makeText(getApplicationContext(), "Next Card!!", Toast.LENGTH_SHORT).show();
         		}
             	
             }
@@ -238,22 +265,17 @@ public class LearnActivity extends Activity implements OnGestureListener {
         	else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY){
         		if(lp.seenTimes()>1){
         			doUndo();
-        			Toast.makeText(getApplicationContext(), "Undo!!", Toast.LENGTH_SHORT).show();
+        			//Toast.makeText(getApplicationContext(), "Undo!!", Toast.LENGTH_SHORT).show();
         		}
         		else
-        			Toast.makeText(getApplicationContext(), "No more previous cards!", Toast.LENGTH_SHORT).show();
+        			Toast.makeText(getApplicationContext(), "No previous card to undo!", Toast.LENGTH_SHORT).show();
         	}
             // bottom to top ->get rid of card only if itemsShown is at least 1
             else if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
-            		itemsShown=3;
-            		Animation a1;
-            		a1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bottom_to_top_slide);
-            		prompt.startAnimation(a1);
-            		status.startAnimation(a1);
             		
-            		Toast.makeText(getApplicationContext(), "Card Removed!!", Toast.LENGTH_SHORT).show();
+            		//Toast.makeText(getApplicationContext(), "Card Removed!!", Toast.LENGTH_SHORT).show();
             		//Do remove here? Instead of doAdvance()
-            		doAdvance();
+            		doRemove();
             }
         	//top to bottom ->show next
             else if(e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
@@ -292,6 +314,11 @@ public class LearnActivity extends Activity implements OnGestureListener {
 		// TODO Auto-generated method stub
 		
 		return false;
+	}
+
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
