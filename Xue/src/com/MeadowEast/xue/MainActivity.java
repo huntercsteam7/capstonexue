@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
-import android.view.GestureDetector.*;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,10 +19,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	public static String mode;
 	static final String TAG = "XUE MainActivity";
 	
-	View.OnTouchListener gestureListener;
-
-	
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,16 +28,12 @@ public class MainActivity extends Activity implements OnClickListener {
         exitButton = (Button) findViewById(R.id.exitButton);
     	ecButton.setOnClickListener(this);
     	ceButton.setOnClickListener(this);
-    	exitButton.setOnClickListener(this);    	
+    	exitButton.setOnClickListener(this);
         File sdCard = Environment.getExternalStorageDirectory();
-        System.out.println(Environment.getExternalStorageDirectory());
-		filesDir = new File (sdCard.getAbsolutePath()); //DIR PATH HERE!
+		filesDir = new File (sdCard.getAbsolutePath());
 		Log.d(TAG, "xxx filesDir="+filesDir);
     }
-    
-    //Do swipe here.
 
-    //On click, switch Activity.
     public void onClick(View v){
     	Intent i;
     	switch (v.getId()){
