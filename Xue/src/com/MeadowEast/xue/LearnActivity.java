@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,6 +78,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
             float velocityY) {
         try {
+        	Animation a1;
         	//right to left. ->next Card
         	if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
  
@@ -83,6 +86,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
         		if(itemsShown>1){
         			itemsShown=3;
         			doAdvance();
+        			a1 = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
+        			prompt.startAnimation(a1);
+        			status.startAnimation(a1);
         		}
             }
         	//left to right -> undo
@@ -204,6 +210,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
 			prompt.setText(lp.prompt());
 			itemsShown = 1;
 			status.setText(lp.deckStatus());
+			Animation a1;
+			a1 = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_slide);
+			prompt.startAnimation(a1);
+			status.startAnimation(a1);
 		} else {
 			//((ViewManager) advance.getParent()).removeView(advance);
 			status.setText("DONE!");
