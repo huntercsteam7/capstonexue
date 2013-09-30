@@ -78,7 +78,11 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
             float velocityY) {
         try {
+<<<<<<< HEAD
     		Animation swipeAnimation;
+=======
+        	Animation a1;
+>>>>>>> c7a93b9fda2408e9e2a8f649460642205f7113b1
         	//right to left. ->next Card
         	if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
  
@@ -86,9 +90,15 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
         		if(itemsShown>1){
         			itemsShown=3;
         			doAdvance();
+<<<<<<< HEAD
         			swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
         			prompt.startAnimation(swipeAnimation);
         			status.startAnimation(swipeAnimation);
+=======
+        			a1 = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
+        			prompt.startAnimation(a1);
+        			status.startAnimation(a1);
+>>>>>>> c7a93b9fda2408e9e2a8f649460642205f7113b1
         		}
             }
         	//left to right -> undo
@@ -211,10 +221,17 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
 			prompt.setText(lp.prompt());
 			itemsShown = 1;
 			status.setText(lp.deckStatus());
+<<<<<<< HEAD
 			Animation swipeAnimation;
 			swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_slide);
     		prompt.startAnimation(swipeAnimation);
     		status.startAnimation(swipeAnimation);
+=======
+			Animation a1;
+			a1 = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_slide);
+			prompt.startAnimation(a1);
+			status.startAnimation(a1);
+>>>>>>> c7a93b9fda2408e9e2a8f649460642205f7113b1
 		} else {
 			//((ViewManager) advance.getParent()).removeView(advance);
 			status.setText("DONE!");
