@@ -14,9 +14,5 @@
     <string name="reallyQuit">Quit and lose all progress on current deck?</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
-    <string name="update_vocab">Update Cards</string>
-    <string name="cancel_update">Cancel</string>
-    <string name="no_sdcard">No SD card detected.\nPlease check your Settings.</string>
-	<string name="sdcard_read_only">SD card is read-only.\nPlease check your Settings.</string>
 
 </resources>
