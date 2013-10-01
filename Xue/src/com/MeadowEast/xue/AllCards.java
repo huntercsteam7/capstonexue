@@ -16,12 +16,8 @@ public class AllCards {
 		return db.cardArray.length;
 	}
 	private Card [] cardArray;
-	
-	
 	private AllCards() {		
-		
-		
-		File file =  new File( MainActivity.filesDir, MainActivity.gStrVocabFileName );
+		File file =  new File(MainActivity.filesDir, "vocabUTF8.txt");
 		ArrayList<Card> allCards = new ArrayList<Card>();
 		Log.d(TAG, "File is "+ file);
 		Log.d(TAG, "Path is "+ file.getAbsolutePath());
@@ -51,6 +47,4 @@ public class AllCards {
 		}
 		cardArray = allCards.toArray(new Card[0]);
 	}
-	
-	
 }

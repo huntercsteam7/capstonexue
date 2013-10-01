@@ -8,7 +8,7 @@ import java.util.*;
 import android.util.Log;
 
 abstract public class LearningProject {
-	
+
 	private String name;
 	private int n, seen;
 	protected List<IndexSet> indexSets;
@@ -17,12 +17,7 @@ abstract public class LearningProject {
 	protected CardStatus cardStatus = null;
 	protected Card card = null;	
 	final static String TAG = "CC LearningProject";
-	private SoundManager _soundManager;
-	private static String medFileRightPath = "R.raw.";
-	private static String medFileWrongPath = "";
 
-	
-	
 	public LearningProject(String name, int n) {
 		this.n = n;
 		this.name = name;
@@ -37,13 +32,9 @@ abstract public class LearningProject {
 		readStatus();
 		Log.d(TAG, "Making deck");
 		deck = makeDeck(n, 700);
-		
-		_soundManager = SoundManager.getInstance();
-		
 		Log.d(TAG, "Exiting LearningProject constructor");
-
 	}	
-	
+
 
 	// n is the size of the deck
 	// target is used to limit the number at Levels 1 and 2, the ones
@@ -58,7 +49,7 @@ abstract public class LearningProject {
 		// 50 percent of our time on Level 1 (and 7 percent and 3 percent each on Levels
 		// 3 and 4).  The remaining 40 percent gets divided between Levels 0 and 2, with
 		// Level 0 time approaching zero as the in-play number gets to 2*target
-		
+
 		// Note: When Level 1 and Level 2 are both half full, this cuts the time on Level 0
 		// to 12.5 percent, which is kind of low.  Easy to fix by setting target higher.
 		float factor1 = Math.max(0,  1-indexSets.get(1).size()/(float) target);
@@ -99,7 +90,7 @@ abstract public class LearningProject {
 		}
 		return d;
 	}
-	
+
 	public boolean next() {
 		if (deck.isEmpty()) return false;
 		cardStatus = deck.get();
@@ -107,53 +98,36 @@ abstract public class LearningProject {
 		card = AllCards.getCard(cardStatus.getIndex());
 		return true;
 	}
-	
+
 	public int currentIndex(){
 		if (cardStatus==null)
 			return -1;
 		return cardStatus.getIndex();
 	}
-	
+
 	abstract protected String prompt();
 	abstract protected String answer();
 	abstract protected String other();
 	abstract public void addNewItems();
 	abstract public void addNewItems(int n);
-	
+
 	public void right(){
 		cardStatus.right();
 		// put it in the appropriate index set
 		indexSets.get(cardStatus.getLevel()).add(cardStatus.getIndex());
-		
-		playRightSound();
-		
 	}
-	
-	public void playRightSound()
-	{
-		if ( _soundManager.isInitialized() )
-			_soundManager.play( R.raw.xue_right );
-	}
-	public void playWrongSound()
-	{
-		if ( _soundManager.isInitialized() )
-			_soundManager.play( R.raw.xue_wrong );
-		
-	}
-	
-	public void wrong() {
+
+	public void wrong(){
 		cardStatus.wrong();
 		// return to the deck
-		deck.put(cardStatus);
-		
-		playWrongSound();
+		deck.put(cardStatus);		
 	}
-	
+
 	String deckStatus(){
 		String left = (deck.size()+1)+" left";
 		return seen > n ? left : seen + " of " + n + " seen, " + left; 
 	}
-	
+
 	String queueStatus(){
 		int [] n = new int[5];
 		for (int i=0; i<5; ++i) n[i] = indexSets.get(i).size();
@@ -162,7 +136,7 @@ abstract public class LearningProject {
 		return String.format("    %d   %d + %d = %d    %d + %d = %d    %d",
 				n[0], n[1], n[2], n[1]+n[2], n[3], n[4], n[3]+n[4], n[0]+n[1]+n[2]+n[3]+n[4]);
 	}
-	
+
 	public void log(String s) throws IOException {
 		Log.d(TAG, "Entering log okay");
 		boolean append = true;
@@ -175,19 +149,18 @@ abstract public class LearningProject {
 		logfile.close();
 		Log.d(TAG, "Exiting log okay");
 	}
-	
+
 	public void writeStatus() throws IOException {
-		
 		File statusobjectfile = new File(MainActivity.filesDir, name + ".status.ser");
 		FileOutputStream statusobjectFOS = new FileOutputStream(statusobjectfile);
 		ObjectOutputStream statusobjectOOS = new ObjectOutputStream(statusobjectFOS);
-		
+
 		Log.d(TAG, "writing objects");
 		statusobjectOOS.writeObject(timestamps);
 		statusobjectOOS.writeObject(indexSets);
 		statusobjectFOS.close();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void readStatus() {
 		FileInputStream statusobjectFIS;
@@ -210,3 +183,4 @@ abstract public class LearningProject {
 	}
 
 }
+
