@@ -5,162 +5,75 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LearnActivity extends Activity implements OnClickListener, OnGestureListener {
+public class LearnActivity extends Activity implements OnClickListener, OnLongClickListener {
 	static final String TAG = "LearnActivity";
-	static final int ECDECKSIZE = 4;
+	static final int ECDECKSIZE = 40;
 	static final int CEDECKSIZE = 60;
+	
 	
 	LearningProject lp;
 	int itemsShown;
 	TextView prompt, answer, other, status;
-	//Button advance, okay;
-	
-	private static final int SWIPE_MIN_DISTANCE = 120;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 150;
-	private GestureDetector gestureScanner;
+	Button advance, okay;
+
+	private SoundManager _soundManager;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn);
+        
         Log.d(TAG, "Entering onCreate");
 
-        gestureScanner = new GestureDetector(this);
+        _soundManager = SoundManager.getInstance();
         
         itemsShown = 0;
         prompt  = (TextView) findViewById(R.id.promptTextView);
         status  = (TextView) findViewById(R.id.statusTextView);
         other   = (TextView) findViewById(R.id.otherTextView);
         answer  = (TextView) findViewById(R.id.answerTextView);
-        //advance  = (Button) findViewById(R.id.advanceButton);
-        //okay     = (Button) findViewById(R.id.okayButton);
+        advance  = (Button) findViewById(R.id.advanceButton);
+        okay     = (Button) findViewById(R.id.okayButton);
     	   
-    	//findViewById(R.id.advanceButton).setOnClickListener(this);
-    	//findViewById(R.id.okayButton).setOnClickListener(this);
+    	findViewById(R.id.advanceButton).setOnClickListener(this);
+    	findViewById(R.id.okayButton).setOnClickListener(this);
     	
-    	//findViewById(R.id.promptTextView).setOnLongClickListener(this);
-    	//findViewById(R.id.answerTextView).setOnLongClickListener(this);
-    	//findViewById(R.id.otherTextView).setOnLongClickListener(this);
+    	findViewById(R.id.promptTextView).setOnLongClickListener(this);
+    	findViewById(R.id.answerTextView).setOnLongClickListener(this);
+    	findViewById(R.id.otherTextView).setOnLongClickListener(this);
     	
     	if (MainActivity.mode.equals("ec"))
     		lp = new EnglishChineseProject(ECDECKSIZE);	
     	else
     		lp = new ChineseEnglishProject(CEDECKSIZE);
+   
+		
     	clearContent();
     	doAdvance();
     }
-    
-    /////////////////////////
-    // SWIPE GESTURES START//
-    /////////////////////////
-    @Override
-    public boolean onTouchEvent(MotionEvent e){
-    	return gestureScanner.onTouchEvent(e);
-    }
 
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-            float velocityY) {
-        try {
-<<<<<<< HEAD
-    		Animation swipeAnimation;
-=======
-<<<<<<< HEAD
-    		Animation swipeAnimation;
-=======
-        	Animation a1;
->>>>>>> c7a93b9fda2408e9e2a8f649460642205f7113b1
->>>>>>> 617d936a12a0b792cb0517d9db357c9f72f9b643
-        	//right to left. ->next Card
-        	if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
- 
-        			//Toast.makeText(getApplicationContext(), "Next Card!!", Toast.LENGTH_SHORT).show();
-        		if(itemsShown>1){
-        			itemsShown=3;
-        			doAdvance();
-<<<<<<< HEAD
-        			swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
-        			prompt.startAnimation(swipeAnimation);
-        			status.startAnimation(swipeAnimation);
-=======
-<<<<<<< HEAD
-        			swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
-        			prompt.startAnimation(swipeAnimation);
-        			status.startAnimation(swipeAnimation);
-=======
-        			a1 = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
-        			prompt.startAnimation(a1);
-        			status.startAnimation(a1);
->>>>>>> c7a93b9fda2408e9e2a8f649460642205f7113b1
->>>>>>> 617d936a12a0b792cb0517d9db357c9f72f9b643
-        		}
-            }
-        	//left to right -> undo
-        	else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY){
-        			Toast.makeText(getApplicationContext(), "Nothing to undo!", Toast.LENGTH_SHORT).show();
-        			doUndo();
-        	}
-            // bottom to top ->get rid of card only if itemsShown is at least 1
-            else if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
-            		//Toast.makeText(getApplicationContext(), "Card Removed!!", Toast.LENGTH_SHORT).show()
-            		doOkay();
-            		
-            }
-        	//top to bottom ->show next
-            else if(e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
-    				//Toast.makeText(getApplicationContext(), "Show next!!", Toast.LENGTH_SHORT).show();
-            	if(itemsShown<3)
-    				doAdvance();
-            }
-            
-        } catch (Exception e) {
-
-        }
-        return false;
-     }
-    
-    ////////////////////////
-    // SWIPE GESTURES END //
-    ////////////////////////
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
     
-
-    
 	private void doAdvance(){
-		if (status.getText().equals("DONE!"))
-			try {
-				lp.log(lp.queueStatus());
-				lp.writeStatus();
-				finish();
-				return;
-				//System.exit(0);
-			} catch (IOException e) {
-				Log.d(TAG, "couldn't write Status");
-				return;
-			}
-		switch (itemsShown){
-		case 0:
+		if (itemsShown == 0){
 			if (lp.next()){
 				prompt.setText(lp.prompt());
 				status.setText(lp.deckStatus());
@@ -169,39 +82,25 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
 				Log.d(TAG, "Error: Deck starts empty");
 				throw new IllegalStateException("Error: Deck starts empty.");
 			}
-			break;
-		case 1:
+		} else if (itemsShown == 1){
 			answer.setText(lp.answer());
 			itemsShown++;
-			break;
-		case 2:
+		} else if (itemsShown == 2){
 			other.setText(lp.other());
-			//advance.setText("next");
+			advance.setText("next");
 			itemsShown++;
-			break;
-		case 3:
+		} else if (itemsShown == 3){
 			// Got it wrong
-			//advance.setText("show");
+			advance.setText("show");
 			lp.wrong();
 			lp.next();
 			clearContent();
 			prompt.setText(lp.prompt());
 			itemsShown = 1;
 			status.setText(lp.deckStatus());
-			break;
-		default:
-			//Should not get here.
-			Log.d(TAG, "Error: Default switch case reached!");
-			break;
 		}
 	}
 	
-	/////////////////
-	//UNDO FUNCTION//
-	/////////////////
-	private void doUndo(){
-
-	}
 	
 	private void clearContent(){
 		prompt.setText("");
@@ -210,7 +109,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
 	}
 	
 	private void doOkay(){
-		if (status.getText().equals("DONE!"))
+		if (okay.getText().equals("done"))
 			try {
 				lp.log(lp.queueStatus());
 				lp.writeStatus();
@@ -226,46 +125,65 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
 		// Got it right
 		lp.right();
 		if (lp.next()){
-			//advance.setText("show");
+			advance.setText("show");
 			clearContent();
 			prompt.setText(lp.prompt());
 			itemsShown = 1;
 			status.setText(lp.deckStatus());
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 617d936a12a0b792cb0517d9db357c9f72f9b643
-			Animation swipeAnimation;
-			swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_slide);
-    		prompt.startAnimation(swipeAnimation);
-    		status.startAnimation(swipeAnimation);
-<<<<<<< HEAD
-=======
-=======
-			Animation a1;
-			a1 = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_slide);
-			prompt.startAnimation(a1);
-			status.startAnimation(a1);
->>>>>>> c7a93b9fda2408e9e2a8f649460642205f7113b1
->>>>>>> 617d936a12a0b792cb0517d9db357c9f72f9b643
 		} else {
-			//((ViewManager) advance.getParent()).removeView(advance);
-			status.setText("DONE!");
-			//okay.setText("done");
+			((ViewManager) advance.getParent()).removeView(advance);
+			status.setText("");
+			okay.setText("done");
 			clearContent();
 		}
 	}
     
+    public void onClick(View v){
+    	switch (v.getId()){
+    	case R.id.advanceButton:
+    		doAdvance();
+			break;
+    	case R.id.okayButton:
+    		doOkay();
+			break;
+//    	case R.id.promptTextView:
+//    	case R.id.answerTextView:
+//    	case R.id.otherTextView:
+//    		Toast.makeText(this, "Item index: "+lp.currentIndex(), Toast.LENGTH_LONG).show();
+//    		break;
+    	}
+    }
 
     public boolean onLongClick(View v){
     	switch (v.getId()){
     	case R.id.promptTextView:
     	case R.id.answerTextView:
     	case R.id.otherTextView:
-    		Toast.makeText(this, "Item index: "+lp.currentIndex(), Toast.LENGTH_LONG).show();
+    		//Toast.makeText(this, "Item index: "+lp.currentIndex(), Toast.LENGTH_LONG).show();
+    		// Send an email to da Boss
+    		sendCardNoteEmail();
     		break;
     	}
     	return true;
+    }
+    
+    public void sendCardNoteEmail() {
+    	
+    	Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);  
+    	emailIntent.setType("plain/text");  
+ 
+    	// Get the current card information and supply it in an email with a note attached
+    	//String cardEnglish = AllCards.getCard( lp.currentIndex() ).getEnglish();
+    	//String cardHanzi = AllCards.getCard( lp.currentIndex() ).getHanzi();
+    	//String getPinyin = AllCards.getCard( lp.currentIndex() ).getPinyin();
+    	String strMsgBody = "Insert card commments here...\n";//+ cardEnglish + "\n" + cardHanzi + "\n" + getPinyin + "\n"; 
+    	
+        String aEmailList[] = { "anthony.olivence@gmail.com" /*"cullen.schaffer@gmail.com"*/ };   
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Card Index: " + lp.currentIndex() );  
+        emailIntent.setType("plain/text");  
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, strMsgBody );  
+        startActivity(Intent.createChooser(emailIntent, "Send your email in:"));   
     }
     
     @Override
@@ -288,35 +206,5 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
         	return super.onKeyDown(keyCode, event);
         }
     }
-
-	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public void onLongPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public void onShowPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public boolean onSingleTapUp(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    
 }
