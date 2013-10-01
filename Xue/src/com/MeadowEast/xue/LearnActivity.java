@@ -78,7 +78,7 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
             float velocityY) {
         try {
-        	Animation a1;
+    		Animation swipeAnimation;
         	//right to left. ->next Card
         	if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
  
@@ -86,9 +86,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
         		if(itemsShown>1){
         			itemsShown=3;
         			doAdvance();
-        			a1 = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
-        			prompt.startAnimation(a1);
-        			status.startAnimation(a1);
+        			swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.right_to_left_slide);
+        			prompt.startAnimation(swipeAnimation);
+        			status.startAnimation(swipeAnimation);
         		}
             }
         	//left to right -> undo
@@ -98,8 +98,9 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
         	}
             // bottom to top ->get rid of card only if itemsShown is at least 1
             else if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
-            		//Toast.makeText(getApplicationContext(), "Card Removed!!", Toast.LENGTH_SHORT).show();
+            		//Toast.makeText(getApplicationContext(), "Card Removed!!", Toast.LENGTH_SHORT).show()
             		doOkay();
+            		
             }
         	//top to bottom ->show next
             else if(e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
@@ -210,10 +211,10 @@ public class LearnActivity extends Activity implements OnClickListener, OnGestur
 			prompt.setText(lp.prompt());
 			itemsShown = 1;
 			status.setText(lp.deckStatus());
-			Animation a1;
-			a1 = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_slide);
-			prompt.startAnimation(a1);
-			status.startAnimation(a1);
+			Animation swipeAnimation;
+			swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.bottom_to_top_slide);
+    		prompt.startAnimation(swipeAnimation);
+    		status.startAnimation(swipeAnimation);
 		} else {
 			//((ViewManager) advance.getParent()).removeView(advance);
 			status.setText("DONE!");
