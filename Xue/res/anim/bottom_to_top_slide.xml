@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 617d936a12a0b792cb0517d9db357c9f72f9b643
 <set xmlns:android="http://schemas.android.com/apk/res/android">
   <translate android:fromXDelta="0%" android:toXDelta="0%"
              android:fromYDelta="100%" android:toYDelta="0%"
              android:duration="700"/>
+<<<<<<< HEAD
+=======
+=======
+<set xmlns:android="http://schemas.android.com/apk/res/android" android:shareInterpolator="false" >
+<translate
+    android:duration="200"
+    android:fromXDelta="0%"
+    android:fromYDelta="100%"
+    android:toXDelta="0%"
+    android:toYDelta="0%" />
+>>>>>>> c7a93b9fda2408e9e2a8f649460642205f7113b1
+>>>>>>> 617d936a12a0b792cb0517d9db357c9f72f9b643
 </set>
