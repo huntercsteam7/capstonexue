@@ -4,9 +4,12 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="17"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -26,6 +29,12 @@
             android:name=".LearnActivity"
             android:label="@string/title_CEActivity"
             android:configChanges="orientation|screenSize">>
+        </activity>
+        <activity 
+	        android:name=".CardUpdater"
+	        android:theme="@android:style/Theme.Dialog"
+	        android:excludeFromRecents="true"
+	        android:noHistory="true">>
         </activity>
     </application>
 
