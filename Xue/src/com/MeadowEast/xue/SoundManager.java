@@ -25,7 +25,7 @@ final public class SoundManager {
 	public enum Sounds { SND_RIGHT, SND_WRONG, SND_BG };
 	
 	/** Hashmap containg the sound effects and the id*/
-	private HashMap<Sounds, Integer> _soundIDMap;
+	private HashMap<Integer, Integer> _soundIDMap;
 
 
     /** Default volume for sound playback relative to current stream volume. */
@@ -57,15 +57,15 @@ final public class SoundManager {
 		_context = context;
 		
 		// Allocate
-		_soundIDMap = new HashMap<Sounds, Integer>();
+		_soundIDMap = new HashMap<Integer, Integer>();
 		_soundPool = new SoundPool( 5, AudioManager.STREAM_MUSIC, 0);
 		_audioManager = (AudioManager)_context.getSystemService( Context.AUDIO_SERVICE );
 		_mediaPlayer = new MediaPlayer();
 		
 		// Load all the sound effect files
 		try {
-			_soundIDMap.put( Sounds.SND_RIGHT, _soundPool.load( context, R.raw.xue_right, 1 ) );
-			_soundIDMap.put( Sounds.SND_WRONG, _soundPool.load( context, R.raw.xue_right, 1 ) );
+			_soundIDMap.put( Sounds.SND_RIGHT.ordinal(), _soundPool.load( context, R.raw.xue_right, 1 ) );
+			_soundIDMap.put( Sounds.SND_WRONG.ordinal(), _soundPool.load( context, R.raw.xue_wrong, 1 ) );
 			// ..
 		}
 		catch( Exception ex ) {
@@ -73,6 +73,8 @@ final public class SoundManager {
 			throw new RuntimeException( "Error loading sound files.", ex );
 			
 		}
+		
+		fIsInitialized = true; 
 	}
 	
     /**

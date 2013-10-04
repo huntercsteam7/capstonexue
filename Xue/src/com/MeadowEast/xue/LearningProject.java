@@ -5,6 +5,8 @@ import java.io.*;
 //import java.text.ParseException;
 import java.util.*;
 
+import com.MeadowEast.xue.SoundManager.Sounds;
+
 import android.util.Log;
 
 abstract public class LearningProject {
@@ -132,12 +134,12 @@ abstract public class LearningProject {
 	public void playRightSound()
 	{
 		if ( _soundManager.isInitialized() )
-			_soundManager.play( R.raw.xue_right );
+			_soundManager.play( Sounds.SND_RIGHT.ordinal() );
 	}
 	public void playWrongSound()
 	{
 		if ( _soundManager.isInitialized() )
-			_soundManager.play( R.raw.xue_wrong );
+			_soundManager.play( Sounds.SND_WRONG.ordinal() );
 		
 	}
 	

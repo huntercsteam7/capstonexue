@@ -222,10 +222,11 @@ public class LearnActivity extends Activity implements OnGestureListener {
     	emailIntent.setType("plain/text");  
  
     	// Get the current card information and supply it in an email with a note attached
-    	//String cardEnglish = AllCards.getCard( lp.currentIndex() ).getEnglish();
-    	//String cardHanzi = AllCards.getCard( lp.currentIndex() ).getHanzi();
-    	//String getPinyin = AllCards.getCard( lp.currentIndex() ).getPinyin();
-    	String strMsgBody = "Insert card commments here...\n";//+ cardEnglish + "\n" + cardHanzi + "\n" + getPinyin + "\n"; 
+    	String cardEnglish = AllCards.getCard( lp.currentIndex() ).getEnglish();
+    	String cardHanzi = AllCards.getCard( lp.currentIndex() ).getHanzi();
+    	String getPinyin = AllCards.getCard( lp.currentIndex() ).getPinyin();
+    	String strMsgBody = "English: " + cardEnglish + "\n" + "Hanzi: " + cardHanzi + "\n" + "Pinyin: " + getPinyin +
+    			"\n\nInsert card comments here...\n";//+ cardEnglish + "\n" + cardHanzi + "\n" + getPinyin + "\n"; 
     	
         String aEmailList[] = { "anthony.olivence@gmail.com" /*"cullen.schaffer@gmail.com"*/ };   
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, aEmailList);
