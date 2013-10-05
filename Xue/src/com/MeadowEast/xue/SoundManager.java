@@ -25,7 +25,7 @@ final public class SoundManager {
 	public enum Sounds { SND_RIGHT, SND_WRONG, SND_BG };
 	
 	/** Hashmap containg the sound effects and the id*/
-	private HashMap<Integer, Integer> _soundIDMap;
+	private HashMap<Sounds, Integer> _soundIDMap;
 
 
     /** Default volume for sound playback relative to current stream volume. */
@@ -57,15 +57,15 @@ final public class SoundManager {
 		_context = context;
 		
 		// Allocate
-		_soundIDMap = new HashMap<Integer, Integer>();
+		_soundIDMap = new HashMap<Sounds, Integer>();
 		_soundPool = new SoundPool( 5, AudioManager.STREAM_MUSIC, 0);
 		_audioManager = (AudioManager)_context.getSystemService( Context.AUDIO_SERVICE );
 		_mediaPlayer = new MediaPlayer();
 		
 		// Load all the sound effect files
 		try {
-			_soundIDMap.put( Sounds.SND_RIGHT.ordinal(), _soundPool.load( context, R.raw.xue_right, 1 ) );
-			_soundIDMap.put( Sounds.SND_WRONG.ordinal(), _soundPool.load( context, R.raw.xue_wrong, 1 ) );
+			_soundIDMap.put( Sounds.SND_RIGHT, _soundPool.load( context, R.raw.xue_right, 1 ) );
+			_soundIDMap.put( Sounds.SND_WRONG, _soundPool.load( context, R.raw.xue_wrong, 1 ) );
 			// ..
 		}
 		catch( Exception ex ) {
@@ -74,7 +74,7 @@ final public class SoundManager {
 			
 		}
 		
-		fIsInitialized = true; 
+		fIsInitialized = true;
 	}
 	
     /**
@@ -85,7 +85,7 @@ final public class SoundManager {
      * @param pan The panning value, range {-1...1} where 0 is center.
      * @throws IllegalArgumentException, RuntimeException
      */
-    public void play( int id, float rate, float pan ) {
+    public void play( Sounds id, float rate, float pan ) {
     	
         int soundId = _soundIDMap.get( id );
         if ( soundId == 0 ) {
@@ -106,11 +106,11 @@ final public class SoundManager {
 
     }
     
-    public void play( int nSoundID ) {
+    public void play( Sounds nSoundID ) {
     	play( nSoundID, 1, 0 );
     }
     
-	public void playSoundFX( int nSoundFXID )
+	public void playSoundFX( Sounds nSoundFXID )
 	{
 		play( nSoundFXID, 1, 0 );
 	}
