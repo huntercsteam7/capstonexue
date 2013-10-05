@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Xue</string>
@@ -17,6 +18,10 @@
     <string name="update_vocab">Update Cards</string>
     <string name="cancel_update">Cancel</string>
     <string name="no_sdcard">No SD card detected.\nPlease check your Settings.</string>
-	<string name="sdcard_read_only">SD card is read-only.\nPlease check your Settings.</string>
+    <string name="sdcard_read_only">SD card is read-only.\nPlease check your Settings.</string>
+    <string name="title_activity_log">LogActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="view_eclog">English-Chinese Logs</string>
+    <string name="view_celog">Chinese-English Logs</string>
 
 </resources>

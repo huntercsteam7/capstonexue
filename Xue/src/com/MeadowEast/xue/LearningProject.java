@@ -15,6 +15,7 @@ abstract public class LearningProject {
 	private int n, seen;
 	protected List<IndexSet> indexSets;
 	protected Map<Integer, Date> timestamps;
+	protected Stack<CardStatus> undoStack = new Stack<CardStatus>();
 	protected Deck deck;
 	protected CardStatus cardStatus = null;
 	protected Card card = null;	
@@ -102,6 +103,10 @@ abstract public class LearningProject {
 		return d;
 	}
 	
+ 	public boolean isUndoEmpty(){
+ 		return undoStack.empty();
+ 	}
+ 	
 	public boolean next() {
 		if (deck.isEmpty()) return false;
 		cardStatus = deck.get();
@@ -125,6 +130,7 @@ abstract public class LearningProject {
 	public void right(){
 		cardStatus.right();
 		// put it in the appropriate index set
+		undoStack.push(cardStatus);
 		indexSets.get(cardStatus.getLevel()).add(cardStatus.getIndex());
 		
 		playRightSound();
@@ -146,9 +152,28 @@ abstract public class LearningProject {
 	public void wrong() {
 		cardStatus.wrong();
 		// return to the deck
+		undoStack.push(cardStatus);
 		deck.put(cardStatus);
 		
 		playWrongSound();
+	}
+	
+	public void undo(){
+		if(cardStatus!=null) //If there is current card status, put it back on top of the deck.
+			deck.putFront(cardStatus);
+		
+		cardStatus = undoStack.pop(); //Get the previous card
+		if(deck.contains(cardStatus)){ //Means it's still in deck, means it was called wrong()
+			deck.removeDuplicate(cardStatus); //First remove the duplicate
+			cardStatus.right(); //Need a check to see if it was already 0 or it was reduced to 0 from 1.
+			seen--;
+			card = AllCards.getCard(cardStatus.getIndex());
+		}
+		else{
+			cardStatus.wrong(); //This also needs a check to see if it was already at 4, or it was right() from 3 to 4
+			seen--;
+			card = AllCards.getCard(cardStatus.getIndex());
+		}
 	}
 	
 	String deckStatus(){
@@ -163,6 +188,7 @@ abstract public class LearningProject {
 //				n[2]+n[3]+n[4], n[0]+n[1]+n[2]+n[3]+n[4]);
 		return String.format("    %d   %d + %d = %d    %d + %d = %d    %d",
 				n[0], n[1], n[2], n[1]+n[2], n[3], n[4], n[3]+n[4], n[0]+n[1]+n[2]+n[3]+n[4]);
+		//Returns string #lvl0, #lvl1, #lvl2, #lvl1+2, #lvl3, #lvl4, #lvl3+4, #total in lvl1-4
 	}
 	
 	public void log(String s) throws IOException {

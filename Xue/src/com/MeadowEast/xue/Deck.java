@@ -18,4 +18,16 @@ public class Deck {
 	public int size(){
 		return cardStatusQueue.size();
 	}
+	
+	public boolean contains(CardStatus cs){
+		return cardStatusQueue.contains(cs);
+	}
+	
+	public void removeDuplicate(CardStatus cs){
+		cardStatusQueue.remove(cardStatusQueue.indexOf(cs)); //Remove the cardstatus at index of desired duplicate parameter
+	}
+	
+	public void putFront(CardStatus cs){
+		cardStatusQueue.addFirst(cs);
+	}
 }

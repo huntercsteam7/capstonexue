@@ -39,6 +39,21 @@
         android:textColor="#FFFFFF" />
     
     <Button
+        android:id="@+id/ecLogButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_eclog" 
+        android:textSize="30sp" 
+        android:textColor="#FFFFFF" />
+    <Button
+        android:id="@+id/ceLogButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_celog" 
+        android:textSize="30sp" 
+        android:textColor="#FFFFFF" />
+    
+    <Button
         android:id="@+id/exitButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

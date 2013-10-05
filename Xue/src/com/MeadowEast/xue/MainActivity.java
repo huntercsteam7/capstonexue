@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	Button ecButton, ceButton, exitButton;
+	Button ecButton, ceButton, ecLogButton, ceLogButton, exitButton;
 	public static File filesDir;
 	public static String mode;
 	static final String TAG = "XUE MainActivity";
@@ -62,8 +62,12 @@ public class MainActivity extends Activity implements OnClickListener {
         ecButton   = (Button) findViewById(R.id.ecButton);
         ceButton   = (Button) findViewById(R.id.ceButton);
         exitButton = (Button) findViewById(R.id.exitButton);
+        ecLogButton = (Button) findViewById(R.id.ecLogButton);
+        ceLogButton = (Button) findViewById(R.id.ceLogButton);
     	ecButton.setOnClickListener(this);
     	ceButton.setOnClickListener(this);
+    	ecLogButton.setOnClickListener(this);
+    	ceLogButton.setOnClickListener(this);
     	exitButton.setOnClickListener(this);
     	
     	// Make sure the SD Card is available and writeable, if not, kill the app
@@ -138,6 +142,16 @@ public class MainActivity extends Activity implements OnClickListener {
     		i = new Intent(this, LearnActivity.class);
     		startActivity(i);
 			break;
+    	case R.id.ecLogButton:
+    		mode = "ec";
+    		i = new Intent(this, LogActivity.class);
+    		startActivity(i);
+    		break;
+    	case R.id.ceLogButton:
+    		mode = "ce";
+    		i = new Intent(this, LogActivity.class);
+    		startActivity(i);
+    		break;
     	case R.id.exitButton:
     		finish();
 			break;

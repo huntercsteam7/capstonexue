@@ -87,7 +87,6 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
     		prompt.setTextIsSelectable(true);					//If c-e mode chinese text view is in prompt.
         	prompt.setCustomSelectionActionModeCallback(this);
     	}
-   
 		
     	clearContent();
     	doAdvance();
@@ -152,7 +151,11 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
     //UNDO FUNCTION//
 	/////////////////
     private void doUndo(){
-    	
+    	lp.undo();
+    	clearContent();
+    	prompt.setText(lp.prompt());
+    	itemsShown = 1;
+    	status.setText(lp.deckStatus());
     }
 	
 	private void clearContent(){
@@ -298,8 +301,14 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 			}
 			//left to right -> undo
 			else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY){
-				Toast.makeText(getApplicationContext(), "Nothing to undo!", Toast.LENGTH_SHORT).show();
-				doUndo();
+				if(lp.isUndoEmpty())
+					Toast.makeText(getApplicationContext(), "Nothing to undo!", Toast.LENGTH_SHORT).show();
+				else{
+					doUndo();
+					swipeAnimation = AnimationUtils.loadAnimation(this, R.anim.left_to_righ_slide);
+					prompt.startAnimation(swipeAnimation);
+					status.startAnimation(swipeAnimation);
+				}
 			}
 			// bottom to top ->get rid of card only if itemsShown is at least 1
 			else if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY){
