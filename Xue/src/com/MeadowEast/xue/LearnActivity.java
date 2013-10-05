@@ -6,12 +6,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.ActionMode.Callback;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +27,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LearnActivity extends Activity implements OnGestureListener {
+public class LearnActivity extends Activity implements OnGestureListener, Callback {
 	static final String TAG = "LearnActivity";
 	static final int ECDECKSIZE = 4;
 	static final int CEDECKSIZE = 60;
@@ -73,10 +77,16 @@ public class LearnActivity extends Activity implements OnGestureListener {
 			}
     	});
     	
-    	if (MainActivity.mode.equals("ec"))
+    	if (MainActivity.mode.equals("ec")){
     		lp = new EnglishChineseProject(ECDECKSIZE);	
-    	else
+    		other.setTextIsSelectable(true);					//If e-c mode, set other chinese txtview to selectable and add callback.
+        	other.setCustomSelectionActionModeCallback(this);
+    	}
+    	else{
     		lp = new ChineseEnglishProject(CEDECKSIZE);
+    		prompt.setTextIsSelectable(true);					//If c-e mode chinese text view is in prompt.
+        	prompt.setCustomSelectionActionModeCallback(this);
+    	}
    
 		
     	clearContent();
@@ -309,9 +319,11 @@ public class LearnActivity extends Activity implements OnGestureListener {
 		}
 		return false;
 	}
+	
 ////////////////////////
 // SWIPE GESTURES END //
 ////////////////////////
+
 
 	public void onLongPress(MotionEvent arg0) {
 		// TODO Auto-generated method stub
@@ -330,6 +342,37 @@ public class LearnActivity extends Activity implements OnGestureListener {
 	}
 
 	public boolean onSingleTapUp(MotionEvent arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean onActionItemClicked(ActionMode arg0, MenuItem arg1) {
+		// TODO Auto-generated method stub
+		int start = other.getSelectionStart();
+		int end = other.getSelectionEnd();
+		String selected = other.getText().toString().substring(start, end);
+		if(arg1.getItemId()==0){ //If the thing clicked is the Lookup button
+			//Toast.makeText(this, "HELLO MDBG.net! - " + arg1.getItemId(), Toast.LENGTH_SHORT).show();
+			String url = "http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + selected;
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(url));
+			startActivity(i); 
+		}
+		return false;
+	}
+
+	public boolean onCreateActionMode(ActionMode arg0, Menu menu) {
+		// TODO Auto-generated method stub
+		menu.add(0,0,0, "MDBG.net Lookup");
+		return true; //Set to true for custom CAB menu items
+	}
+
+	public void onDestroyActionMode(ActionMode arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean onPrepareActionMode(ActionMode arg0, Menu arg1) {
 		// TODO Auto-generated method stub
 		return false;
 	}
