@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
@@ -24,6 +25,7 @@ import android.view.ViewManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 
 	private SoundManager _soundManager;
 	private GestureDetector gestureScanner;
+	private Chronometer cMeter;
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_THRESHOLD_VELOCITY = 150;
 	
@@ -60,6 +63,7 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
         status  = (TextView) findViewById(R.id.statusTextView);
         other   = (TextView) findViewById(R.id.otherTextView);
         answer  = (TextView) findViewById(R.id.answerTextView);
+        cMeter = (Chronometer) findViewById(R.id.chronometerLearn);
         //advance  = (Button) findViewById(R.id.advanceButton);
         //okay     = (Button) findViewById(R.id.okayButton);
     	   
@@ -274,6 +278,28 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+/////////////////////
+//CHRONOMETER TIMER//
+/////////////////////
+	
+	private long elapsedTime=0;
+	
+	@Override 
+	public void onPause(){
+		super.onPause();
+		elapsedTime = SystemClock.elapsedRealtime() - cMeter.getBase();
+		cMeter.stop();
+ 	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		cMeter.setBase(SystemClock.elapsedRealtime() - elapsedTime);
+		cMeter.start();
+	}
+	
+	
 
 /////////////////////////
 // SWIPE GESTURES START//

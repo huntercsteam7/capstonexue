@@ -108,7 +108,10 @@ abstract public class LearningProject {
  	}
  	
 	public boolean next() {
-		if (deck.isEmpty()) return false;
+		if (deck.isEmpty()){ 
+			seen++;
+			return false;
+		}
 		cardStatus = deck.get();
 		seen++;
 		card = AllCards.getCard(cardStatus.getIndex());
@@ -128,11 +131,10 @@ abstract public class LearningProject {
 	abstract public void addNewItems(int n);
 	
 	public void right(){
+		undoStack.push(cardStatus);
 		cardStatus.right();
 		// put it in the appropriate index set
-		undoStack.push(cardStatus);
 		indexSets.get(cardStatus.getLevel()).add(cardStatus.getIndex());
-		
 		playRightSound();
 		
 	}
@@ -150,9 +152,9 @@ abstract public class LearningProject {
 	}
 	
 	public void wrong() {
+		undoStack.push(cardStatus);
 		cardStatus.wrong();
 		// return to the deck
-		undoStack.push(cardStatus);
 		deck.put(cardStatus);
 		
 		playWrongSound();
@@ -165,13 +167,12 @@ abstract public class LearningProject {
 		cardStatus = undoStack.pop(); //Get the previous card
 		if(deck.contains(cardStatus)){ //Means it's still in deck, means it was called wrong()
 			deck.removeDuplicate(cardStatus); //First remove the duplicate
-			cardStatus.right(); //Need a check to see if it was already 0 or it was reduced to 0 from 1.
 			seen--;
 			card = AllCards.getCard(cardStatus.getIndex());
 		}
-		else{
-			cardStatus.wrong(); //This also needs a check to see if it was already at 4, or it was right() from 3 to 4
+		else{						//Else if it's not in deck it was right. Remove level+1.getindex() from indexSets
 			seen--;
+			indexSets.get(cardStatus.getLevel()+1).remove(cardStatus.getIndex());
 			card = AllCards.getCard(cardStatus.getIndex());
 		}
 	}
