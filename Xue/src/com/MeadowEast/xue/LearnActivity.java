@@ -35,6 +35,8 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 	static final int CEDECKSIZE = 60;
 
 	
+	public Chronometer cm;
+	
 	LearningProject lp;
 	int itemsShown;
 	TextView prompt, answer, other, status;
@@ -66,7 +68,11 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
         cMeter = (Chronometer) findViewById(R.id.chronometerLearn);
         //advance  = (Button) findViewById(R.id.advanceButton);
         //okay     = (Button) findViewById(R.id.okayButton);
-    	   
+        
+        cm = (Chronometer) findViewById(R.id.chronometer1);
+        
+        
+        
     	//findViewById(R.id.advanceButton).setOnClickListener(this);
     	//findViewById(R.id.okayButton).setOnClickListener(this);
     	
@@ -80,21 +86,37 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 				return false;
 			}
     	});
+<<<<<<< HEAD
+    	
+=======
+>>>>>>> b5e18c75faeb3cdb6a4cd9ea8f3ce41fb033b1be
     	
     	if (MainActivity.mode.equals("ec")){
     		lp = new EnglishChineseProject(ECDECKSIZE);	
     		other.setTextIsSelectable(true);					//If e-c mode, set other chinese txtview to selectable and add callback.
+<<<<<<< HEAD
+        	other.setCustomSelectionActionModeCallback(this);   //Set callback to this activity on the event that a selection is detected
+=======
         	other.setCustomSelectionActionModeCallback(this);
+>>>>>>> b5e18c75faeb3cdb6a4cd9ea8f3ce41fb033b1be
     	}
     	else{
     		lp = new ChineseEnglishProject(CEDECKSIZE);
     		prompt.setTextIsSelectable(true);					//If c-e mode chinese text view is in prompt.
+<<<<<<< HEAD
+        	prompt.setCustomSelectionActionModeCallback(this);  //Same as above
+=======
         	prompt.setCustomSelectionActionModeCallback(this);
+>>>>>>> b5e18c75faeb3cdb6a4cd9ea8f3ce41fb033b1be
     	}
 		
     	clearContent();
     	doAdvance();
     }
+<<<<<<< HEAD
+    
+=======
+>>>>>>> b5e18c75faeb3cdb6a4cd9ea8f3ce41fb033b1be
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -269,7 +291,8 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
             .setNegativeButton(R.string.no, null)
             .show();
             return true;
-        } else {
+        } 
+        else {
         	return super.onKeyDown(keyCode, event);
         }
     }
@@ -279,6 +302,7 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 		return false;
 	}
 	
+<<<<<<< HEAD
 /////////////////////
 //CHRONOMETER TIMER//
 /////////////////////
@@ -291,15 +315,32 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 		elapsedTime = SystemClock.elapsedRealtime() - cMeter.getBase();
 		cMeter.stop();
  	}
+=======
+	private long elapsedMillis=0;
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		elapsedMillis = SystemClock.elapsedRealtime() - cm.getBase();
+		cm.stop();
+	}
+	
+>>>>>>> 5eca6152c611f188ecfbcda0547dc31e286a237e
 	
 	@Override
 	public void onResume(){
 		super.onResume();
+<<<<<<< HEAD
 		cMeter.setBase(SystemClock.elapsedRealtime() - elapsedTime);
 		cMeter.start();
 	}
 	
 	
+=======
+		cm.setBase(SystemClock.elapsedRealtime()-elapsedMillis);
+		cm.start();
+	}
+>>>>>>> 5eca6152c611f188ecfbcda0547dc31e286a237e
 
 /////////////////////////
 // SWIPE GESTURES START//
@@ -358,7 +399,40 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 ////////////////////////
 // SWIPE GESTURES END //
 ////////////////////////
+<<<<<<< HEAD
+	
 
+////////////////////////////////////////////////////////
+//CUSTOM ACTION MODE FOR COPY/PASTE, ADDING DICTIONARY//
+////////////////////////////////////////////////////////
+	
+	public boolean onActionItemClicked(ActionMode arg0, MenuItem arg1) {
+		// TODO Auto-generated method stub
+		int start = other.getSelectionStart();
+		int end = other.getSelectionEnd();
+		String selected = other.getText().toString().substring(start, end);
+		if(arg1.getItemId()==0){ //If the thing clicked is the Lookup button
+			//Toast.makeText(this, "HELLO MDBG.net! - " + arg1.getItemId(), Toast.LENGTH_SHORT).show();
+			String url = "http://www.mdbg.net/chindict/chindict.php?page=worddict&wdrst=0&wdqb=" + selected;
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(Uri.parse(url));
+			startActivity(i); 
+		}
+		return false;
+	}
+
+	public boolean onCreateActionMode(ActionMode arg0, Menu menu) {
+		// TODO Auto-generated method stub
+		menu.add("MDBG.net Lookup");
+		return true; //Set to true for custom CAB menu items
+	}
+
+/////////////////////////////////////////////
+//UNUSED EXTRA IMPLEMENTATION METHODS BELOW//
+/////////////////////////////////////////////
+=======
+
+>>>>>>> b5e18c75faeb3cdb6a4cd9ea8f3ce41fb033b1be
 
 	public void onLongPress(MotionEvent arg0) {
 		// TODO Auto-generated method stub
@@ -381,6 +455,8 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
 	public boolean onActionItemClicked(ActionMode arg0, MenuItem arg1) {
 		// TODO Auto-generated method stub
 		int start = other.getSelectionStart();
@@ -401,6 +477,7 @@ public class LearnActivity extends Activity implements OnGestureListener, Callba
 		menu.add(0,0,0, "MDBG.net Lookup");
 		return true; //Set to true for custom CAB menu items
 	}
+>>>>>>> b5e18c75faeb3cdb6a4cd9ea8f3ce41fb033b1be
 
 	public void onDestroyActionMode(ActionMode arg0) {
 		// TODO Auto-generated method stub

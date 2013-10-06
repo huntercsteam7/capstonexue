@@ -14,6 +14,12 @@
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF" />
 
+	<Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+    
     <TextView
         android:id="@+id/promptTextView"
         android:layout_width="fill_parent"
